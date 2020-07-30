@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/dbutils.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'Ifloggedin.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,39 +23,44 @@ class _LoginPageState extends State<LoginPage> {
   TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 5.0);
   TextStyle linkStyle = TextStyle(color: Colors.blue, fontSize: 5.0);
 
-  bool _isLoggedIn =false;
 
-  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
-
-  _login() async{
-    try{
-      await _googleSignIn.signIn();
-      _isLoggedIn =true;
-    }
-    catch(err){
-      print(err);
-    }
-  }
-
-  _logout() async {
-    _googleSignIn.signOut();
-    setState(() {
-      _isLoggedIn = false;
+  createAlertDialog(BuildContext context){
+    return showDialog(context: context,builder: (context){
+      return AlertDialog(
+        title: Text("Logged In as"),
+        content: Text("Sure proceed"),
+        actions: <Widget>[
+          MaterialButton(
+            onPressed: ()=>{
+              Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context)=>LoggedIn()
+              ))
+            },
+            child: Text("Confirm"),
+          ),
+          RaisedButton(onPressed: (){DbUtils.logout();},
+          child: Text("Change"),
+          )
+        ],
+      );
     });
   }
+
+  Future<void> navigationAfterLogin() async {
+    await DbUtils.login().then((value) => Navigator.of(context).push(MaterialPageRoute(
+      builder: (context){return LoggedIn();}
+    )));
+
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: _isLoggedIn
-          ? Container(
-              child: Stack(
-                children: <Widget>[
-                    IconButton(icon: Icon(Icons.delete_outline), onPressed: (){_logout();})
-                ],
-              ),
-      ) :
+      body: 
       Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -267,7 +274,18 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white
                 ),
                 child:  RaisedButton(
-                  onPressed: ()=>{_login()},
+                  onPressed: () {
+                    DbUtils.isLoggedIn ?
+
+                        createAlertDialog(context):FutureBuilder(
+                      future: navigationAfterLogin(),
+                      builder: (context, snapshot) {
+                        return Center(child: CircularProgressIndicator());
+                      },
+                    );
+
+
+                  },
                   child: Row(
                     children: <Widget>[
                       Container(child: Image.asset("assets/images/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png"),),
