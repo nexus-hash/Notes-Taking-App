@@ -1,0 +1,362 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController nameController2 = TextEditingController();
+
+  String Password="";
+  String Username="";
+
+  final _formKey = GlobalKey<FormState>();
+
+  TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 5.0);
+  TextStyle linkStyle = TextStyle(color: Colors.blue, fontSize: 5.0);
+
+  bool _isLoggedIn =false;
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
+  _login() async{
+    try{
+      await _googleSignIn.signIn();
+      _isLoggedIn =true;
+    }
+    catch(err){
+      print(err);
+    }
+  }
+
+  _logout() async {
+    _googleSignIn.signOut();
+    setState(() {
+      _isLoggedIn = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      body: _isLoggedIn
+          ? Container(
+              child: Stack(
+                children: <Widget>[
+                    IconButton(icon: Icon(Icons.delete_outline), onPressed: (){_logout();})
+                ],
+              ),
+      ) :
+      Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [
+                  Colors.indigo,
+                  Colors.blueAccent
+                ]
+            )
+        ),
+        child: Stack(
+          children: <Widget>[
+
+            Positioned(
+              top: 0.0,
+              child: ClipPath(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*.37,
+                  color: Colors.white.withOpacity(0.5),
+
+                ),
+
+                clipper: CustomClipPath2(),
+              ),
+            ),
+
+            Positioned(
+              top: 0.0,
+              child: ClipPath(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*.35,
+                  color: Colors.white,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top:MediaQuery.of(context).size.height*.045 ,
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back_ios,color: Colors.indigoAccent,),
+                          onPressed: ()=>{},
+                        ),
+                      ),
+                      Positioned(
+                          top: MediaQuery.of(context).size.height*.16,
+
+                          child: Container(
+
+                            child:SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Login',
+                                  style: TextStyle(
+                                    color: Colors.black54.withOpacity(0.5),
+                                    fontSize: 35.0,
+                                    fontWeight: FontWeight.bold,
+                                    decorationColor: Colors.indigoAccent,
+                                    shadows: <Shadow>[
+
+                                      Shadow(
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 8.0,
+                                        color: Colors.indigoAccent.withOpacity(0.1),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                      )
+                    ],
+                  ),
+                ),
+
+                clipper: CustomClipPath(),
+              ),
+            ),
+
+            Positioned(
+              top: MediaQuery.of(context).size.height*.45,
+              right: MediaQuery.of(context).size.width*0.07,
+              child:
+              Container(
+                width: MediaQuery.of(context).size.width*.86,
+                height: MediaQuery.of(context).size.height*.08,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(0.0,0.0),
+                        blurRadius: 7.0
+                    )
+                  ],
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.72,
+                    child: Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        controller: nameController,
+                        validator: (value){
+                          bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value);
+                          if(value.isEmpty){
+                            return 'Please Enter Some Text';
+                          }
+                          else if(emailValid){
+                            return null;
+                          }
+                          return 'Username Invalid';
+                        },
+
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Username"
+                        ),
+                        onChanged: (text){Username=text;},
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height*.55,
+              right: MediaQuery.of(context).size.width*0.07,
+              child:
+              Container(
+                width: MediaQuery.of(context).size.width*.86,
+                height: MediaQuery.of(context).size.height*.08,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.9),
+                  borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.white,
+                        offset: Offset(0.0,0.0),
+                        blurRadius: 7.0
+                    )
+                  ],
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*.72,
+                    child: TextFormField(
+                      controller: nameController2,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Password"
+                      ),
+                      onChanged: (text2){Password=text2;},
+                    ),
+
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height*.67,
+              right: MediaQuery.of(context).size.width*.38,
+              child: new Container(
+                width: MediaQuery.of(context).size.width*.24,
+                height: MediaQuery.of(context).size.height*.067,
+                child: new RaisedButton(
+                  onPressed: ()=>{},
+                  child: Text(
+                    "Login", style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0
+                  ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      side: BorderSide(color: Colors.white,
+                          width: 4.0
+                      )
+                  ),
+                  color: Colors.deepPurpleAccent,
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height*.75,
+              right: MediaQuery.of(context).size.width*.25,
+              child: Container(
+                width: MediaQuery.of(context).size.width*.50,
+                height: MediaQuery.of(context).size.height*.045,
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text("--Or--",
+                      style: TextStyle(
+                          fontSize: 15.0,
+                          color: Colors.yellowAccent
+                      ),)
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height*.8,
+              right: MediaQuery.of(context).size.width*.18,
+              child: Container(
+                width: MediaQuery.of(context).size.width*.64,
+                height: MediaQuery.of(context).size.height*.07,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                    color: Colors.white
+                ),
+                child:  RaisedButton(
+                  onPressed: ()=>{_login()},
+                  child: Row(
+                    children: <Widget>[
+                      Container(child: Image.asset("assets/images/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png"),),
+                      Container(
+                        child: Text("Sign In Using Google",
+                          style: TextStyle(
+                              fontSize: 17.0
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                  ),
+                  color: Colors.white,
+                ),
+
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height*.94,
+              right: MediaQuery.of(context).size.width*.25,
+              child: Container(
+                width: MediaQuery.of(context).size.width*.50,
+                height: MediaQuery.of(context).size.height*.045,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: RichText(
+                      text: TextSpan(
+                          style: defaultStyle,
+                          children: <TextSpan>[
+
+                            TextSpan(
+                                text: 'Forgot Password?',
+                                style: TextStyle(
+                                    fontSize:15.0,
+                                    color: Colors.yellowAccent
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    print("hello");
+                                  }
+                            )
+
+                          ]
+                      )
+                  ),
+                ),
+              ),
+            ),
+
+          ],
+        ),
+      ),
+
+    );
+  }
+}
+class CustomClipPath extends CustomClipper<Path>{
+  @override
+  Path getClip(Size size) {
+    // TODO: implement getClip
+    Path path =Path();
+    path.lineTo(0, size.height);
+
+    path.quadraticBezierTo(size.width/4, size.height-40, size.width/2, size.height-20);
+    path.quadraticBezierTo(3/4*size.width, size.height, size.width,size.height-30);
+    path.lineTo(size.width, 0);
+    return path;
+  }
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+class CustomClipPath2 extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    // TODO: implement getClip
+    Path path = Path();
+    path.lineTo(0, size.height);
+
+    path.quadraticBezierTo(
+        size.width / 4, size.height - 40, size.width / 2, size.height - 20);
+    path.quadraticBezierTo(
+        3 / 4 * size.width, size.height, size.width, size.height - 30);
+    path.lineTo(size.width, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
