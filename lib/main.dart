@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/dbutils.dart';
+import 'package:flutter_app/GlobalVariables/dbutils.dart';
 import 'LoginPage.dart';
 
 void main() {
