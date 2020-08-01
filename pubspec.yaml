@@ -72,6 +72,9 @@ flutter:
     - family: Nicholia
       fonts:
         - asset: assets/fonts/Nicholia.ttf
+    - family: ChalkBoard
+      fonts:
+        - asset: assets/fonts/chalkboard.ttf
   uses-material-design: true
 
   #

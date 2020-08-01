@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/EditNote.dart';
 import 'package:flutter_app/GlobalVariables/GlobalVar.dart';
 import 'package:flutter_app/GlobalVariables/dbutils.dart';
 import 'package:flutter_app/WriteNote.dart';
@@ -12,6 +13,9 @@ class LoggedIn extends StatefulWidget {
 }
 
 class _LoggedInState extends State<LoggedIn> {
+
+
+
 
   Color defaultcolor = Colors.black87;
 
@@ -113,7 +117,7 @@ class _LoggedInState extends State<LoggedIn> {
 
 
                   if (_formKey.currentState.validate()) {
-                    GVar.title=temp;
+                    GVar.Title=temp;
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context){return NoteTaking();
 
@@ -325,16 +329,77 @@ class _LoggedInState extends State<LoggedIn> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height*.6,
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
+              child: ListView.separated(
+                separatorBuilder: (context,index){return SizedBox(height: 12.0,);},
+                  padding: const EdgeInsets.all(20),
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
-                  itemCount: 10,
+                  itemCount: GVar.notes.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
-                      height: 50,
-                      color: Colors.amber,
-                      child: Center(child: Text('Entry A')),
+                      padding: EdgeInsets.all(30.0),
+                      height: MediaQuery.of(context).size.height*.2,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: Colors.tealAccent
+                      ),
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(GVar.notes[index].title,
+                            style: TextStyle(
+                              fontSize: 19.0,
+                              color: Colors.deepPurple,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              fontFamily: 'chalkboard'
+                            ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height*.08,
+                              child: Stack(
+                                children: <Widget>[
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+
+                                      GVar.notes[index].description.substring(0,GVar.end[index]),
+                                      style: TextStyle(
+                                        fontSize: 15.0
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: RaisedButton(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(3.0))
+                                      ),
+                                      padding: EdgeInsets.all(2.0),
+
+                                      child: Text("Edit",
+                                        style: TextStyle(
+                                          color: Colors.white
+                                        ),
+                                      ),
+                                      color: Colors.redAccent,
+                                      onPressed: (){
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context){return Edit(index);}
+                                        ));
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      )
                     );
                   }
               )

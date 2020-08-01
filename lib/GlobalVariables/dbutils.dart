@@ -1,3 +1,5 @@
+
+
 import 'package:flutter_app/Ifloggedin.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +46,17 @@ abstract class DbUtils {
       'title': title,
       'description': description
     });
-
   }
 
+
+
+}
+
+class NotesCollection {
+    String title;
+    String description;
+    NotesCollection(String v,String h){
+      title =v;
+      description = h;
+    }
 }

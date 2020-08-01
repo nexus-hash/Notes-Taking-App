@@ -4,15 +4,23 @@ import 'package:flutter_app/GlobalVariables/dbutils.dart';
 import 'package:flutter_app/Ifloggedin.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class NoteTaking extends StatefulWidget {
+
+class Edit extends StatefulWidget {
   @override
-  _NoteTakingState createState() => _NoteTakingState();
+  _EditState createState() => _EditState();
+
+  static int indexi;
+
+  Edit(int index){
+    indexi = index;
+  }
 }
 
-class _NoteTakingState extends State<NoteTaking> {
+class _EditState extends State<Edit> {
 
 
   final _formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController(text: GVar.notes[Edit.indexi].description);
   String TempDescription =  "";
 
 
@@ -27,19 +35,19 @@ class _NoteTakingState extends State<NoteTaking> {
 
           children: <Widget>[
             Positioned(
-              top:MediaQuery.of(context).size.height*0.42,
-              right: -MediaQuery.of(context).size.width*.05,
-              child: Transform.rotate(
-                angle: 3.14*3/2,
-                child: ClipPath(
-                  child: Container(
-                    width: MediaQuery.of(context).size.height,
-                    height: MediaQuery.of(context).size.height * .17,
-                    color: Colors.red,
+                top:MediaQuery.of(context).size.height*0.42,
+                right: -MediaQuery.of(context).size.width*.05,
+                child: Transform.rotate(
+                  angle: 3.14*3/2,
+                  child: ClipPath(
+                    child: Container(
+                      width: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height * .17,
+                      color: Colors.red,
+                    ),
+                    clipper: CustomClipPath(),
                   ),
-                  clipper: CustomClipPath(),
-                ),
-              )
+                )
             ),
             Positioned(
                 top:MediaQuery.of(context).size.height*0.425,
@@ -91,9 +99,9 @@ class _NoteTakingState extends State<NoteTaking> {
                               left: MediaQuery.of(context).size.width*0.05,
                               top: MediaQuery.of(context).size.height*0.035,
                               child: Text(GVar.Title,style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 50.0,
-                                fontFamily: 'Nicholia'
+                                  color: Colors.white,
+                                  fontSize: 50.0,
+                                  fontFamily: 'Nicholia'
                               ),),
                             ),
                             Positioned(
@@ -103,7 +111,7 @@ class _NoteTakingState extends State<NoteTaking> {
                                 GVar.Description=TempDescription;
                                 DbUtils.createRecord(GVar.Title, GVar.Description);
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context){return LoggedIn();}
+                                    builder: (context){return LoggedIn();}
                                 ));
                               }),
                             )
@@ -119,23 +127,24 @@ class _NoteTakingState extends State<NoteTaking> {
                         child: Form(
                           key: _formKey,
                           child: Padding(
-                              padding: EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 bottom: MediaQuery.of(context).viewInsets.bottom
-                              ),
+                            ),
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: TextFormField(
                                 keyboardType: TextInputType.multiline,
                                 maxLines: 20000,
+                                controller: nameController,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17.0
+                                    color: Colors.white,
+                                    fontSize: 17.0
                                 ),
                                 decoration: InputDecoration(
-                                  hintText: "Enter Content",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white
-                                  )
+                                    hintText: "Enter Content",
+                                    hintStyle: TextStyle(
+                                        color: Colors.white
+                                    )
                                 ),
                                 onChanged: (temp){
                                   TempDescription = temp;

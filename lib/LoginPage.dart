@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: BoxDecoration(
             gradient:
-                LinearGradient(colors: [Colors.indigo, Colors.blueAccent])),
+                LinearGradient(colors: [Colors.black, Colors.black54])),
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: IconButton(
                           icon: Icon(
                             Icons.arrow_back_ios,
-                            color: Colors.indigoAccent,
+                            color: Colors.red,
                           ),
                           onPressed: () => {},
                         ),
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Shadow(
                                         offset: Offset(0.0, 0.0),
                                         blurRadius: 8.0,
-                                        color: Colors.indigoAccent
+                                        color: Colors.red
                                             .withOpacity(0.1),
                                       ),
                                     ],
@@ -214,12 +214,12 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () => {},
                   child: Text(
                     "Login",
-                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                    style: TextStyle(color: Colors.black87, fontSize: 20.0),
                   ),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      side: BorderSide(color: Colors.white, width: 4.0)),
-                  color: Colors.deepPurpleAccent,
+                      side: BorderSide(color: Colors.blueGrey, width: 4.0)),
+                  color: Colors.white,
                 ),
               ),
             ),
