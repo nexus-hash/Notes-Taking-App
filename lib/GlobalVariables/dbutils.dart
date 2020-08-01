@@ -2,8 +2,10 @@ import 'package:flutter_app/Ifloggedin.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class DbUtils {
+abstract class DbUtils {
   static bool isLoggedIn = false;
   static GoogleSignIn googleSignIn = GoogleSignIn(
       scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly']);
@@ -27,4 +29,22 @@ class DbUtils {
     googleSignIn.signOut();
     isLoggedIn = false;
   }
+  static String UserName = googleSignIn.currentUser.displayName;
+  static String Mail = googleSignIn.currentUser.email;
+  static String Photo = googleSignIn.currentUser.photoUrl;
+
+
+
+  static final db =Firestore.instance;
+  static void createRecord(String title,String description) async {
+    final FirebaseUser User  =await auth.currentUser();
+    final String UserId = User.uid;
+    await db.collection("users")
+        .document(UserId).collection("notes").add({
+      'title': title,
+      'description': description
+    });
+
+  }
+
 }
