@@ -50,8 +50,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> navigationAfterLogin() async {
-    await DbUtils.login()
-        .then((value) => Navigator.of(context).push(_createRoute()));
+    await DbUtils.login();
+    await DbUtils.getList();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context){return LoggedIn();}));
   }
 
   @override

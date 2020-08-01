@@ -4,12 +4,12 @@ import 'package:flutter_app/GlobalVariables/dbutils.dart';
 import 'package:flutter_app/Ifloggedin.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class NoteTaking extends StatefulWidget {
+class ViewNote extends StatefulWidget {
   @override
-  _NoteTakingState createState() => _NoteTakingState();
+  _ViewNoteState createState() => _ViewNoteState();
 }
 
-class _NoteTakingState extends State<NoteTaking> {
+class _ViewNoteState extends State<ViewNote> {
 
 
   final _formKey = GlobalKey<FormState>();
@@ -27,19 +27,19 @@ class _NoteTakingState extends State<NoteTaking> {
 
           children: <Widget>[
             Positioned(
-              top:MediaQuery.of(context).size.height*0.42,
-              right: -MediaQuery.of(context).size.width*.05,
-              child: Transform.rotate(
-                angle: 3.14*3/2,
-                child: ClipPath(
-                  child: Container(
-                    width: MediaQuery.of(context).size.height,
-                    height: MediaQuery.of(context).size.height * .17,
-                    color: Colors.red,
+                top:MediaQuery.of(context).size.height*0.42,
+                right: -MediaQuery.of(context).size.width*.05,
+                child: Transform.rotate(
+                  angle: 3.14*3/2,
+                  child: ClipPath(
+                    child: Container(
+                      width: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height * .17,
+                      color: Colors.red,
+                    ),
+                    clipper: CustomClipPath(),
                   ),
-                  clipper: CustomClipPath(),
-                ),
-              )
+                )
             ),
             Positioned(
                 top:MediaQuery.of(context).size.height*0.425,
@@ -66,6 +66,14 @@ class _NoteTakingState extends State<NoteTaking> {
                       width: MediaQuery.of(context).size.height,
                       height: MediaQuery.of(context).size.height * .13,
                       color: Colors.redAccent.withOpacity(0.5),
+                      child: Transform.rotate(
+                          angle: 3.14/2,
+                        child: IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,size: 30.0,),
+                            onPressed: (){
+                          Navigator.pop(context);
+                            }
+                        ),
+                      ),
                     ),
                     clipper: CustomClipPath(),
                   ),
@@ -91,23 +99,12 @@ class _NoteTakingState extends State<NoteTaking> {
                               left: MediaQuery.of(context).size.width*0.05,
                               top: MediaQuery.of(context).size.height*0.035,
                               child: Text(GVar.Title,style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 50.0,
-                                fontFamily: 'Nicholia'
+                                  color: Colors.white,
+                                  fontSize: 50.0,
+                                  fontFamily: 'Nicholia'
                               ),),
                             ),
-                            Positioned(
-                              left: MediaQuery.of(context).size.width*0.6,
-                              top: MediaQuery.of(context).size.height*0.04,
-                              child: IconButton(icon: Icon(MdiIcons.contentSaveAllOutline,color: Colors.white,), onPressed: () async {
-                                GVar.Description=TempDescription;
-                                await DbUtils.createRecord(GVar.Title, GVar.Description);
-                                await DbUtils.getList();
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context){return LoggedIn();}
-                                ));
-                              }),
-                            )
+                            
                           ],
                         ),
                       ),
@@ -117,34 +114,12 @@ class _NoteTakingState extends State<NoteTaking> {
                       child: Container(
                         width: MediaQuery.of(context).size.width*.74,
                         height:  MediaQuery.of(context).size.height*.88,
-                        child: Form(
-                          key: _formKey,
-                          child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context).viewInsets.bottom
-                              ),
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: TextFormField(
-                                keyboardType: TextInputType.multiline,
-                                maxLines: 20000,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17.0
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: "Enter Content",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white
-                                  )
-                                ),
-                                onChanged: (temp){
-                                  TempDescription = temp;
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(GVar.Description,style: TextStyle(
+                            color: Colors.white
+                          ),),
+                        )
                       ),
                     )
                   ],
@@ -173,5 +148,4 @@ class CustomClipPath extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;}

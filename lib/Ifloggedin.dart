@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/EditNote.dart';
 import 'package:flutter_app/GlobalVariables/GlobalVar.dart';
 import 'package:flutter_app/GlobalVariables/dbutils.dart';
+import 'package:flutter_app/ViewNote.dart';
 import 'package:flutter_app/WriteNote.dart';
 import 'LoginPage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -334,7 +335,7 @@ class _LoggedInState extends State<LoggedIn> {
                   padding: const EdgeInsets.all(20),
                   physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
-                  itemCount: GVar.notes.length,
+                  itemCount: DbUtils.notes.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       padding: EdgeInsets.all(30.0),
@@ -346,58 +347,46 @@ class _LoggedInState extends State<LoggedIn> {
                       child: Stack(
                         children: <Widget>[
                           Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(GVar.notes[index].title,
-                            style: TextStyle(
-                              fontSize: 19.0,
-                              color: Colors.deepPurple,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              fontFamily: 'chalkboard'
-                            ),
+                            alignment: Alignment.centerRight,
+                            child: RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(3.0))
+                              ),
+                              padding: EdgeInsets.all(2.0),
+
+                              child: Text("Edit",
+                                style: TextStyle(
+                                    color: Colors.white
+                                ),
+                              ),
+                              color: Colors.redAccent,
+                              onPressed: (){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context){return Edit(index);}
+                                ));
+                              },
                             ),
                           ),
+
                           Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Container(
-                              height: MediaQuery.of(context).size.height*.08,
-                              child: Stack(
-                                children: <Widget>[
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-
-                                      GVar.notes[index].description.substring(0,GVar.end[index]),
-                                      style: TextStyle(
-                                        fontSize: 15.0
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: RaisedButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(3.0))
-                                      ),
-                                      padding: EdgeInsets.all(2.0),
-
-                                      child: Text("Edit",
-                                        style: TextStyle(
-                                          color: Colors.white
-                                        ),
-                                      ),
-                                      color: Colors.redAccent,
-                                      onPressed: (){
-                                        Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context){return Edit(index);}
-                                        ));
-                                      },
-                                    ),
-                                  )
-                                ],
+                            alignment: Alignment.centerLeft,
+                            child: MaterialButton(
+                              onPressed: (){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context){return ViewNote();}
+                                ));
+                              },
+                              child: Text(DbUtils.notes[index].title,
+                              style: TextStyle(
+                                fontSize: 19.0,
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                fontFamily: 'chalkboard'
+                              ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       )
                     );

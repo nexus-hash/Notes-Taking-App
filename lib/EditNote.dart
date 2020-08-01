@@ -18,11 +18,43 @@ class Edit extends StatefulWidget {
 
 class _EditState extends State<Edit> {
 
-
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController(text: GVar.notes[Edit.indexi].description);
+  TextEditingController nameController = TextEditingController(text: DbUtils.notes[Edit.indexi].description);
   String TempDescription =  "";
 
+
+  String temp = "";
+  createAlertDialog2(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.red,
+            title: Text("Delete Current Note",style: TextStyle(color: Colors.white),),
+
+            actions: <Widget>[
+              RaisedButton(
+                onPressed: () => {
+                  Navigator.of(context, rootNavigator: true).pop('dialog')
+                },
+                child: Text("Cancel"),
+              ),
+              RaisedButton(
+                color: Colors.black87,
+                onPressed: () async {
+
+                  await DbUtils.deleteData(GVar.Title);
+                  await DbUtils.getList();
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context){return LoggedIn();}
+                  ));
+                },
+                child: Text("Confirm"),
+              )
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +106,16 @@ class _EditState extends State<Edit> {
                       width: MediaQuery.of(context).size.height,
                       height: MediaQuery.of(context).size.height * .13,
                       color: Colors.redAccent.withOpacity(0.5),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Transform.rotate(
+                          angle: 3.14/2,
+                          child: IconButton(icon:Icon(Icons.delete,color: Colors.white,size: 30.0,),
+                          onPressed: (){
+                            createAlertDialog2(context);
+                          },),
+                        ),
+                      ),
                     ),
                     clipper: CustomClipPath(),
                   ),
@@ -107,9 +149,10 @@ class _EditState extends State<Edit> {
                             Positioned(
                               left: MediaQuery.of(context).size.width*0.6,
                               top: MediaQuery.of(context).size.height*0.04,
-                              child: IconButton(icon: Icon(MdiIcons.contentSaveAllOutline,color: Colors.white,), onPressed: (){
+                              child: IconButton(icon: Icon(MdiIcons.contentSaveAllOutline,color: Colors.white,), onPressed: ()async{
                                 GVar.Description=TempDescription;
-                                DbUtils.createRecord(GVar.Title, GVar.Description);
+                                await DbUtils.updateData(GVar.Title, GVar.Description);
+                                await DbUtils.getList();
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context){return LoggedIn();}
                                 ));
