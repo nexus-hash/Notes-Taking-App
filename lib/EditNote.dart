@@ -9,7 +9,7 @@ class Edit extends StatefulWidget {
   @override
   _EditState createState() => _EditState();
 
-  static int indexi;
+  int indexi;
 
   Edit(int index){
     indexi = index;
@@ -19,9 +19,14 @@ class Edit extends StatefulWidget {
 class _EditState extends State<Edit> {
 
   final _formKey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController(text: DbUtils.notes[Edit.indexi].description);
+  TextEditingController nameController ;
   String TempDescription =  "";
 
+
+  @override
+  void initState(){
+    nameController = new TextEditingController(text: DbUtils.notes[widget.indexi].description);
+  }
 
   String temp = "";
   createAlertDialog2(BuildContext context) {
@@ -43,7 +48,7 @@ class _EditState extends State<Edit> {
                 color: Colors.black87,
                 onPressed: () async {
 
-                  await DbUtils.deleteData(GVar.Title);
+                  await DbUtils.deleteData(DbUtils.notes[widget.indexi].title);
                   await DbUtils.getList();
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context){return LoggedIn();}
